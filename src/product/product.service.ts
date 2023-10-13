@@ -1,3 +1,4 @@
+import { EditDto } from './dto/edit.dto';
 import { PrismaService } from './../prisma/prisma.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Product } from './product.entity';
@@ -13,7 +14,7 @@ export class ProductService {
   }
 
   async findById(id: number): Promise<Product> {
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prisma.product.findFirstOrThrow({
       where: {
         id: id,
       },
@@ -25,6 +26,31 @@ export class ProductService {
     try {
       const product = await this.prisma.product.create({
         data: dto,
+      });
+
+      return product;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ForbiddenException('Credentials taken');
+        }
+      }
+      throw error;
+    }
+  }
+
+  async editProduct(dto: EditDto): Promise<Product> {
+    try {
+      const product = await this.prisma.product.update({
+        where: {
+          id: dto.id,
+        },
+        data: {
+          amount: dto.amount,
+          currency: dto.currency,
+          image: dto.image,
+          name: dto.name,
+        },
       });
 
       return product;

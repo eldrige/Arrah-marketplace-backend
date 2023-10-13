@@ -12,10 +12,12 @@ type Product {
 
 type Query {
   products: [Product!]!
+  product(id: Float!): Product!
 }
 
 type Mutation {
   createProduct(input: ProductDto!): Product!
+  editProduct(input: EditDto!): Product!
 }
 
 input ProductDto {
@@ -23,4 +25,12 @@ input ProductDto {
   image: String!
   amount: Float!
   currency: String!
+}
+
+input EditDto {
+  id: Float!
+  name: String
+  image: String
+  amount: Float
+  currency: String
 }
