@@ -3,14 +3,15 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { ProductDto } from './dto/product.dto';
+import { GetProductsDto } from './dto/get-products.dto';
 
 @Resolver((of) => Product)
 export class ProductResolver {
   constructor(private productService: ProductService) {}
 
   @Query((returns) => [Product])
-  products(): Promise<Product[]> {
-    return this.productService.findAll();
+  products(@Args('input') input: GetProductsDto): Promise<Product[]> {
+    return this.productService.findAll(input.take, input.skip);
   }
 
   @Query((returns) => Product)

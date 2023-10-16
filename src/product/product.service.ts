@@ -8,8 +8,11 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
-  async findAll(): Promise<Product[]> {
-    const products = await this.prisma.product.findMany();
+  async findAll(take?: number, skip?: number): Promise<Product[]> {
+    const products = await this.prisma.product.findMany({
+      take: take || undefined,
+      skip: skip || undefined,
+    });
     return products;
   }
 
