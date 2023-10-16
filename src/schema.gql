@@ -11,13 +11,8 @@ type Product {
 }
 
 type Query {
-  products(input: GetProductsDto!): [Product!]!
+  products(take: Float, skip: Float): [Product!]!
   product(id: Float!): Product!
-}
-
-input GetProductsDto {
-  take: Float
-  skip: Float
 }
 
 type Mutation {
